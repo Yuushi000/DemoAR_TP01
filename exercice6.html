@@ -1,96 +1,34 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8" />
-    <title>Exercice 6 - WebAR UI DOM Overlay</title>
-    <!-- Inclusion d'A-Frame -->
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <!-- Inclusion d'AR.js -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
-      /* Style de l'interface utilisateur (UI DOM overlay) */
-      #ui-overlay {
-        position: absolute;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 999;
-        background: rgba(255, 255, 255, 0.8);
-        padding: 15px;
-        border-radius: 8px;
-        text-align: center;
-        font-family: Arial, sans-serif;
-        display: none; /* Masqué par défaut jusqu'à la détection du marqueur */
-      }
-      #ui-overlay div {
-        margin-bottom: 10px;
-      }
-      .color-btn {
-        width: 30px;
-        height: 30px;
-        border: none;
-        border-radius: 50%;
-        cursor: pointer;
-        margin: 0 5px;
-      }
+      #ui { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; display: none; }
     </style>
   </head>
   <body style="margin: 0; overflow: hidden;">
-
-    <!-- Interface utilisateur HTML (DOM overlay) -->
-    <div id="ui-overlay">
-      <div>
-        <label for="size-slider">Taille de la boîte : </label>
-        <input type="range" id="size-slider" min="0.1" max="3.0" step="0.1" value="1">
-      </div>
-      <div>
-        <span>Couleur : </span>
-        <button class="color-btn" style="background-color: red;" onclick="changeColor('red')"></button>
-        <button class="color-btn" style="background-color: green;" onclick="changeColor('green')"></button>
-        <button class="color-btn" style="background-color: blue;" onclick="changeColor('blue')"></button>
-      </div>
+    <div id="ui">
+      <input type="range" min="0.1" max="3.0" step="0.1" value="1" oninput="box.setAttribute('scale', this.value+' '+this.value+' '+this.value)">
+      <button onclick="box.setAttribute('material', 'color', 'red')">Rouge</button>
+      <button onclick="box.setAttribute('material', 'color', 'green')">Vert</button>
+      <button onclick="box.setAttribute('material', 'color', 'blue')">Bleu</button>
     </div>
 
-    <!-- Scène AR -->
     <a-scene embedded arjs>
-      
-      <!-- Marqueur Hiro avec écoute des événements markerFound et markerLost -->
-      <a-marker preset="hiro" id="hiro-marker">
-        <!-- Boîte 3D affichée sur le marqueur -->
-        <a-box id="my-box" position="0 0.5 0" material="color: red;"></a-box>
+      <a-marker preset="hiro" id="marker">
+        <a-box id="box" position="0 0.5 0" material="color: red;"></a-box>
       </a-marker>
-
       <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      // Gestion de l'affichage de l'UI et des interactions en temps réel
-      const marker = document.querySelector('#hiro-marker');
-      const uiOverlay = document.querySelector('#ui-overlay');
-      const box = document.querySelector('#my-box');
-      const slider = document.querySelector('#size-slider');
+      const marker = document.querySelector('#marker');
+      const ui = document.querySelector('#ui');
+      const box = document.querySelector('#box');
 
-      // Afficher l'UI quand le marqueur Hiro est détecté
-      marker.addEventListener('markerFound', () => {
-        uiOverlay.style.display = 'block';
-      });
-
-      // Masquer l'UI quand le marqueur est perdu
-      marker.addEventListener('markerLost', () => {
-        uiOverlay.style.display = 'none';
-      });
-
-      // Changer la taille de la boîte en temps réel via le slider (0.1 -> 3.0)[cite: 1]
-      slider.addEventListener('input', (event) => {
-        const val = event.target.value;
-        box.setAttribute('scale', `${val} ${val} ${val}`);
-      });
-
-      // Changer immédiatement la couleur de la boîte au clic[cite: 1]
-      function changeColor(color) {
-        box.setAttribute('material', 'color', color);
-      }
+      marker.addEventListener('markerFound', () => ui.style.display = 'block');
+      marker.addEventListener('markerLost', () => ui.style.display = 'none');
     </script>
-
   </body>
 </html>
