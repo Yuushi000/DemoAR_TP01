@@ -10,7 +10,7 @@
         <a-box
           id="interactiveBox"
           position="0 0.5 0"
-          material="color: #4CC3D9; opacity: 0.6; transparent: true"
+          material="color: blue; opacity: 0.6; transparent: true"
           animation__rotate="property: rotation; to: 0 360 0; loop: true; dur: 4000; easing: linear"
           animation__scale="property: scale; from: 1 1 1; to: 1.4 1.4 1.4; dur: 200; startEvents: click; dir: alternate"
           class="clickable"
@@ -29,20 +29,30 @@
     </a-scene>
  
     <script>
-      const box = document.querySelector('#interactiveBox');
- 
-      box.addEventListener('click', function () {
-        
-        box.setAttribute('material', 'color', 'red');
-        box.setAttribute('material', 'opacity', 1);
-        box.setAttribute('material', 'transparent', false);
- 
-        
+        const box = document.querySelector('#interactiveBox');
+        let isRed = false; // mémorise l'état actuel (false = pas rouge, true = rouge)
+
+        box.addEventListener('click', function () {
+        isRed = !isRed; // inverse l'état à chaque clic
+
+        if (isRed) {
+            
+            box.setAttribute('material', 'color', 'red');
+            box.setAttribute('material', 'opacity', 0.6);
+            box.setAttribute('material', 'transparent', false);
+        } else {
+            
+            box.setAttribute('material', 'color', 'blue');
+            box.setAttribute('material', 'opacity', 0.6);
+            box.setAttribute('material', 'transparent', true);
+        }
+
         box.setAttribute('animation__rotate', 'dur', 800);
         setTimeout(() => {
-          box.setAttribute('animation__rotate', 'dur', 4000);
+            box.setAttribute('animation__rotate', 'dur', 4000);
         }, 1000);
-      });
+        });
     </script>
+    
   </body>
 </html>
